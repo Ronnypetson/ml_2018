@@ -1,14 +1,26 @@
 import numpy as np
 from preprocess import *
 from log_reg import *
+from multi_log_reg import *
 from matplotlib import pyplot as plt
 
 def mse(Y,Y_):
 	return np.mean((Y-Y_)**2)
 
-def descida_gradiente(train_X,train_Y,valid_X,valid_Y,learning_rate=0.1,max_iter=500,class_=0):
+def log_reg_(train_X,train_Y,valid_X,valid_Y,learning_rate=0.1,max_iter=500,class_=0):
 	## Descida de gradiente
 	lr_model = log_reg(learning_rate=learning_rate,train_iter=max_iter,class_=class_)
+	cost = lr_model.fit(train_X,train_Y)
+	plt.xlabel('iterations')
+	plt.ylabel('Cost')
+	plt.plot(cost)
+	plt.show()
+	Y_ = lr_model.predict(valid_X)
+	return mse(valid_Y,Y_), lr_model.theta
+
+def multi_log_reg_(train_X,train_Y,valid_X,valid_Y,num_classes=10,learning_rate=0.1,max_iter=500):
+	## Descida de gradiente
+	lr_model = multi_log_reg(learning_rate=learning_rate,train_iter=max_iter,num_classes=num_classes)
 	cost = lr_model.fit(train_X,train_Y)
 	plt.xlabel('iterations')
 	plt.ylabel('Cost')
@@ -28,7 +40,7 @@ num_samples = train_X.shape[0]
 num_features = train_X.shape[1]
 k = 2
 block_len = int(num_samples/k)
-methods = {"descida_gradiente":descida_gradiente}
+methods = {"multi_log_reg":multi_log_reg_} # "log_reg":log_reg_
 for m in methods:
 	print("Evaluating method "+m)
 	mean_losses = np.zeros(k)
