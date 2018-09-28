@@ -12,7 +12,7 @@ def relu_(z):
 	return np.array([1.0 if v > 0 else 0.0 for v in z])
 
 def sigmoid_(z):
-	g = self.sigmoid(z)
+	g = sigmoid(z)
 	return g*(1.0-g)
 
 acts = {"sigmoid":sigmoid,"relu":relu}
@@ -33,6 +33,7 @@ class neural_net:
 		self.train_iter = train_iter
 		self.mini_batch_len = mini_batch_len
 		self.num_classes = layers_dims[-1][1]
+		self.activation = activation
 		self.layers = []
 		for d in layers_dims:
 			self.layers.append(layer(d[0],d[1],activation))
@@ -48,13 +49,14 @@ class neural_net:
 
 	def forward(self,X):
 		a = [X] # Atentar para os índices: a[i], theta[i] -> z[i] -> a[i+1]
-		z = [ np.dot(self.layers[0].theta,a[0]) ]
+		z = [ np.dot(a[0],self.layers[0].theta) ]
 		for i in range(1,len(self.layers)):
-			a.append(acts[activation](z[i-1]))
+			a.append(acts[self.activation](z[i-1]))
 			a[i][0] = 1.0
-			z.append(np.dot(self.layers[i].theta,a[i]))
-		a.append(acts[activation](z[-1])) # Tem que guardar a ativação do final
-		return a, acts_[activation](z)
+			z.append(np.dot(a[i],self.layers[i].theta))
+		a.append(acts[self.activation](z[-1])) # Tem que guardar a ativação do final
+		g_ = [ acts_[self.activation](z_) for z_ in z ]
+		return a, g_
 
 	# Fit parameters theta by mini-batch gradient descent
 	def fit(self,X_train,Y_train):
@@ -74,10 +76,10 @@ class neural_net:
 				y[int(Y_train[ind])] = 1.0
 				act,act_ = self.forward(x)
 				erro = [act[-1]-y]
-				for j in range(len(self.layers)-2,0,-1):
-					erro.append( np.dot(self.layers[j].theta[1:],erro[-1]).multiply(act_[j]) )
+				for j in range(len(self.layers)-2,-1,-1):
+					erro.append( np.multiply( np.dot(self.layers[j+1].theta,erro[-1]),act_[j] ) ) # act_[j+1]?
 				for j in range(len(self.layers)):
-					deltas[j] = np.add(deltas[j],np.outer(erro[len(self.layers)-j],act[j]))
+					deltas[j] = np.add(deltas[j],np.outer(act[j],erro[len(self.layers)-j-1]))
 				mean_losses[i] += self.cross_entropy_loss(y,act[-1]) # changed here
 			# Compute gradients
 			deltas = [d*self.learning_rate/self.mini_batch_len for d in deltas]
