@@ -40,6 +40,5 @@ class log_reg:
 	# Estimate Y from X
 	def predict(self,X_test):
 		#X_test = np.insert(X_test,0,1,1)
-		Y_ = 1.0/(1.0+np.exp(-np.dot(X_test,self.theta)))
-		return np.array([1.0 if y > 0.5 else 0.0 for y in Y_]) # changed here for logistic regression
-
+		return 1.0/(1.0+np.exp(-np.dot(X_test,self.theta)))
+		#return np.array([1.0 if y > 0.5 else 0.0 for y in Y_]) # changed here for logistic regression

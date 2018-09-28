@@ -39,5 +39,5 @@ class multi_log_reg:
 
 	# Estimate Y from X
 	def predict(self,X_test):
-		return [np.argmax(self.softmax(np.dot(x,self.theta))) for x in X_test]
-
+		#return [np.argmax(self.softmax(np.dot(x,self.theta))) for x in X_test]
+		return self.softmax(np.dot(X_test,self.theta))
