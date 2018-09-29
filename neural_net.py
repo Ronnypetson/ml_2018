@@ -45,7 +45,7 @@ class neural_net:
 		return -np.dot(y,np.log(y_))
 
 	def loss(self,y,y_):
-		return -np.add(np.dot(y,np.log(y_))+np.dot((1.0-y),(np.log(1.0-y_))))
+		return -(np.dot(y,np.log(y_))+np.dot((1.0-y),np.log(1.0-y_)))
 
 	def forward(self,X):
 		a = [X] # Atentar para os índices: a[i], theta[i] -> z[i] -> a[i+1]
@@ -80,7 +80,7 @@ class neural_net:
 					erro.append( np.multiply( np.dot(self.layers[j+1].theta,erro[-1]),act_[j] ) ) # act_[j+1]?
 				for j in range(len(self.layers)):
 					deltas[j] = np.add(deltas[j],np.outer(act[j],erro[len(self.layers)-j-1]))
-				mean_losses[i] += self.cross_entropy_loss(y,act[-1]) # changed here
+				mean_losses[i] += self.loss(y,act[-1]) # changed here
 			# Compute gradients
 			deltas = [d*self.learning_rate/self.mini_batch_len for d in deltas]
 			# Update parameters
