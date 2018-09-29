@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import confusion_matrix
 from preprocess import *
 from log_reg import *
 from multi_log_reg import *
@@ -61,15 +62,18 @@ def neural_net_(train_X,train_Y,valid_X,valid_Y,learning_rate=0.1,max_iter=500):
 	plt.ylabel('Cost')
 	plt.plot(cost)
 	plt.show()
-	#Y_ = lr_model.predict(valid_X)
+	Y_ = lr_model.predict(valid_X)
+	Y_ = [ np.argmax(v) for v in Y_ ]
 	#one_hot_Y = []
 	#for i in range(valid_Y.shape[0]):
 	#	y = np.zeros(num_classes)
 	#	y[int(valid_Y[i])] = 1.0
 	#	one_hot_Y.append(y)
 	#return mse_(np.array(one_hot_Y),Y_), lr_model.theta
+	return confusion_matrix(valid_Y,Y_)
 
 ## Read data from csv files
+# Normalization of all data is division of all features by 255.0
 # Load train-validation
 train_X,train_Y = getXY('fashion-mnist-dataset/fashion-mnist_train.csv')
 # Load test
@@ -91,7 +95,7 @@ for m in methods:
 		_train_X = np.concatenate((train_X[0:i*block_len],train_X[(i+1)*block_len:]),axis=0)
 		_valid_Y = train_Y[i*block_len:(i+1)*block_len]
 		_train_Y = np.concatenate((train_Y[0:i*block_len],train_Y[(i+1)*block_len:]),axis=0)
-		methods[m](_train_X,_train_Y,_valid_X,_valid_Y)
+		print(methods[m](_train_X,_train_Y,_valid_X,_valid_Y))
 		#mean_losses[i], params[i] = methods[m](_train_X,_train_Y,_valid_X,_valid_Y) # params[i]
 	#print("Validation mean loss score %s: %f"%(m,np.mean(mean_losses)))
 	#chosen_params[m] = params[np.argmin(mean_losses)]

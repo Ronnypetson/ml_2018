@@ -28,7 +28,7 @@ class neural_net:
 	# Initializer
 	# O primeiro neuronio de cada camada é o bias
 	def __init__(self,learning_rate=0.1,train_iter=1000,mini_batch_len=100,layers_dims=[(785,100),(100,10)],\
-							 activation="relu"):
+							 activation="sigmoid"):
 		self.learning_rate = learning_rate
 		self.train_iter = train_iter
 		self.mini_batch_len = mini_batch_len
@@ -42,11 +42,11 @@ class neural_net:
 		return np.exp(y)/np.sum(np.exp(y))
 
 	def cross_entropy_loss(self,y,y_):
-		y_ = np.clip(y_,1e-12,1.0-1e-12)
+		#y_ = np.clip(y_,1e-12,1.0-1e-12)
 		return -np.dot(y,np.log(y_))
 
 	def loss(self,y,y_):
-		y_ = np.clip(y_,1e-12,1.0-1e-12)
+		#y_ = np.clip(y_,1e-12,1.0-1e-12)
 		return -(np.dot(y,np.log(y_))+np.dot((1.0-y),np.log(1.0-y_)))
 
 	def forward(self,X):
@@ -93,6 +93,5 @@ class neural_net:
 
 	# Estimate Y from X
 	def predict(self,X_test):
-		#return [np.argmax(self.softmax(np.dot(x,self.theta))) for x in X_test]
-		return forward(X_test)[0]
+		return np.array([self.forward(x)[0][-1] for x in X_test])
 
