@@ -7,6 +7,12 @@ def relu(z):
 def sigmoid(z):
 	return 1.0/(1.0+np.exp(-z))
 
+def tanh(z):
+	return 2.0/(1.0+np.exp(-2*z))-1.0
+
+def leaky_relu(z):
+	return [v if v > 0.0 else 0.01*v for v in z]
+
 # Derivadas das ativações
 def relu_(z):
 	return np.array([1.0 if v > 0 else 0.0 for v in z])
@@ -15,8 +21,14 @@ def sigmoid_(z):
 	g = sigmoid(z)
 	return g*(1.0-g)
 
-acts = {"sigmoid":sigmoid,"relu":relu}
-acts_ = {"sigmoid":sigmoid_,"relu":relu_}
+def tanh_(z):
+	return 4.0*np.exp(-2.0*z)/(1.0+np.exp(-2.0*x))**2
+
+def leaky_relu_(z):
+	return  np.array([1.0 if v > 0 else 0.01 for v in z])
+
+acts = {"sigmoid":sigmoid,"relu":relu,"tanh":tanh}
+acts_ = {"sigmoid":sigmoid_,"relu":relu_,"tanh":tanh_}
 
 class layer:
 	def __init__(self,input_len,output_len,activation):
