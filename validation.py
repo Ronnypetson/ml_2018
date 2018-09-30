@@ -52,9 +52,9 @@ def multi_log_reg_(train_X,train_Y,valid_X,valid_Y,num_classes=10,learning_rate=
 	norm_acc = np.mean([conf[i][i]/np.sum(conf[i]) for i in range(conf.shape[0])])
 	return norm_acc, lr_model, conf #mse_(np.array(one_hot_Y),Y_), lr_model.theta
 
-def neural_net_(train_X,train_Y,valid_X,valid_Y,learning_rate=0.1,max_iter=1000):
+def neural_net_(train_X,train_Y,valid_X,valid_Y,learning_rate=0.1,max_iter=100):
 	## Descida de gradiente
-	lr_model = neural_net(learning_rate=learning_rate,train_iter=max_iter)
+	lr_model = neural_net(learning_rate=learning_rate,train_iter=max_iter,layers_dims=[(785,100),(100,100),(100,10)],activation="tanh")
 	cost = lr_model.fit(train_X,train_Y)
 	plt.xlabel('iterations')
 	plt.ylabel('Cost')
@@ -96,7 +96,7 @@ k = 2
 chosen_models = {}
 chosen_confs = {}
 block_len = int(num_samples/k)
-methods = {"RegressaoLogistica_OneVsAll":log_reg_, "RegressaoLogistica_Multiclasse":multi_log_reg_} # "RegressaoLogistica_OneVsAll":log_reg_, "RegressaoLogistica_Multiclasse":multi_log_reg_, "RedeNeural":neural_net_
+methods = {"RedeNeural":neural_net_} # "RegressaoLogistica_OneVsAll":log_reg_, "RegressaoLogistica_Multiclasse":multi_log_reg_, "RedeNeural":neural_net_
 for m in methods:
 	print("Evaluating method "+m)
 	norm_accuracy = np.zeros(k)

@@ -22,13 +22,13 @@ def sigmoid_(z):
 	return g*(1.0-g)
 
 def tanh_(z):
-	return 4.0*np.exp(-2.0*z)/(1.0+np.exp(-2.0*x))**2
+	return 4.0*np.exp(-2.0*z)/(1.0+np.exp(-2.0*z))**2
 
 def leaky_relu_(z):
 	return  np.array([1.0 if v > 0 else 0.01 for v in z])
 
-acts = {"sigmoid":sigmoid,"relu":relu,"tanh":tanh}
-acts_ = {"sigmoid":sigmoid_,"relu":relu_,"tanh":tanh_}
+acts = {"sigmoid":sigmoid,"relu":relu,"tanh":tanh, "leaky_relu":leaky_relu}
+acts_ = {"sigmoid":sigmoid_,"relu":relu_,"tanh":tanh_, "leaky_relu":leaky_relu_}
 
 class layer:
 	def __init__(self,input_len,output_len,activation):
@@ -40,7 +40,7 @@ class neural_net:
 	# Initializer
 	# O primeiro neuronio de cada camada é o bias
 	def __init__(self,learning_rate=0.1,train_iter=1000,mini_batch_len=100,layers_dims=[(785,100),(100,10)],\
-							 activation="relu"):
+							 activation="sigmoid"):
 		self.learning_rate = learning_rate
 		self.train_iter = train_iter
 		self.mini_batch_len = mini_batch_len
