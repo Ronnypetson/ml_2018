@@ -4,6 +4,7 @@ import numpy as np
 def getXY(fl_path='fashion-mnist-dataset/fashion-mnist_train.csv'):
 	# Loading the table
 	fmnist_table = np.genfromtxt(fl_path,dtype=np.float32,delimiter=',',skip_header=1,encoding='ascii')
+	np.random.shuffle(fmnist_table)
 	Y = np.array([t[0] for t in fmnist_table])
 	X = [t/255.0 for t in fmnist_table]
 	for x in X: x[0] = 1.0

@@ -12,6 +12,7 @@ class multi_log_reg:
 		return np.exp(y)/np.sum(np.exp(y))
 
 	def cross_entropy_loss(self,y,y_):
+		y_ = np.clip(y_,1e-12,1.0-1e-12)
 		return -np.dot(y,np.log(y_))
 
 	# Fit parameters theta by mini-batch gradient descent

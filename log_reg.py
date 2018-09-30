@@ -12,6 +12,7 @@ class log_reg:
 		return 1.0/(1.0+np.exp(-np.dot(x,self.theta)))
 
 	def loss_(self,x,y):
+		y_ = np.clip(y_,1e-12,1.0-1e-12)
 		return -np.log(self.h(x)) if y == 1.0 else -np.log(1.0-self.h(x))
 
 	# Fit parameters theta by mini-batch gradient descent
